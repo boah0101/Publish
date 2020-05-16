@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- 구글 웹폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap" rel="stylesheet">
+
+    <!-- jQuery 불러오기 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        .body{
+            margin: auto;
+            margin-top: 150px;
+            margin-left: 150px;
+            font-family: 'Yeon Sung', cursive;
+        }
+        .image_area{
+            background-image: url(http://cfile227.uf.daum.net/image/2553803D56CAB5C2021329);
+            background-position: center;
+            background-size: cover;
+            width: 500px;
+            margin-top: 150px;
+            margin-bottom: 60px;
+            padding: 100px;
+            }
+        
+        .large_text{
+            font-size: 30px;
+            }
+
+        .small_text{
+            font-size: 15px;
+        }
+        
+        .description{
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .fex_class{
+            font-size: 15px;
+            color:cornflowerblue;
+            margin-bottom: 20px;
+        }
+
+        .form-group{
+            max-width:500px;
+        }
+
+        .btn_btn-light{
+            width: 100px;
+            margin:auto;
+            margin-top:10px;
+        }
+
+    </style>
+
+    <script>
+       
+
+         $(document).ready(function(){
+            
+            $.ajax({
+                type: "GET",
+                url: "https://api.manana.kr/exchange/rate.json",
+                data: {},
+                success: function (response) {
+                let fex = response[1]["rate"]
+
+                $("#fex_class").append(fex);
+                }
+            })
+
+
+            });
+
+
+
+        function fill(){
+            let name = $("#name").val();
+            let qty = $("#qty").val();
+            let add = $("#add").val();
+            let phone = $("#phone").val();
+
+            if(name == ""){
+                alert("이름 쓰세요");
+            } else if(qty == ""){
+                alert("수량 쓰세요");
+            } else if(add == ""){
+                alert("주소 쓰세요");
+            } else if(phone == ""){
+                alert("전화번호 쓰세요");
+            } 
+
+            // if(name != "" || ) -> 어떤 값이든 일단 차 있음 OR
+            
+
+        }
+    </script>
+
+
+</head>
+<body class="body">
+    <div class="image_area">
+    </div>
+
+    <div class="large_text"> 
+        대동강 물 <span class="small_text">가격: 4000냥 (상평통보 only)</span>
+    </div>
+    
+    <div class="description"> 
+        대동강 물 팝니다. 당신도 될수있다 자랑스런 조선의 흑우! 
+    </div>
+    
+    <div id="fex_class" class="fex_class"> 
+        환율 (달러-원): 
+    </div>
+
+    <div class="large_text"> 
+        주문하기</span>
+    </div>
+
+    <div>
+        주문자 성함: <input id="name" type="text" >
+    </div>
+    <div>
+        수량: <input id="qty" type="options">
+    </div>
+    <div>
+        주소: <input id="add" type="text">
+    </div>
+    <div>
+        전화번호: <input id="phone" type="text">
+    </div>
+    
+    <div class="btn_btn-light">
+      <button type="button" class="btn_btn-light" onclick="fill()">주문하기</button>
+    </div>
+
+</body>
+</html>
+
