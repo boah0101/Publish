@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Webpage Title -->
+    <title>나홀로 쇼핑몰</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="/static/images/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+    <style>
+        .body {
+            margin: auto;
+            margin-top: 150px;
+            margin-left: 150px;
+            font-family: 'Yeon Sung', cursive;
+        }
+
+        .image_area {
+            background-image: url(http://cfile227.uf.daum.net/image/2553803D56CAB5C2021329);
+            background-position: center;
+            background-size: cover;
+            width: 500px;
+            margin-top: 150px;
+            margin-bottom: 60px;
+            padding: 100px;
+        }
+
+        .large_text {
+            font-size: 30px;
+        }
+
+        .small_text {
+            font-size: 15px;
+        }
+
+        .description {
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .fex_class {
+            font-size: 15px;
+            color: cornflowerblue;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            max-width: 500px;
+        }
+
+        .btn_btn-light {
+            width: 100px;
+            margin: auto;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#table").empty();
+            fex();
+            listing();
+        });
+
+
+        function fex() {
+            alert("a")
+            $.ajax({
+                type: "GET",
+                url: "https://api.manana.kr/exchange/rate.json",
+                data: {},
+                success: function (response) {
+                    let fex = response[1]["rate"]
+                    $("#fex_class").append(fex);
+                }
+            });
+        }
+        
+            function write_order_info() {
+            alert("write_order_info");
+            let name = $('#name').val();
+            let qty = $('#qty').val();
+            let add = $('#add').val();
+            let phone = $('#phone').val();
+            $.ajax({
+                type: 'POST',
+                url: '/post',
+                data: { name_give: name, qty_give: qty, add_give: add, phone_give: phone },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        window.location.reload();
+                    } else {
+                        alert('정보를 받아오지 못했습니다');
+                    }
+                }
+            });
+        }
+
+        function listing() {
+            $.ajax({
+                type: "GET",
+                url: "/get",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let orders = response['orders'];
+                        console.log(orders);
+                        for (let i = 0; i < orders.length; i++) {
+                            make_card(orders[i]['name'], orders[i]['count'], orders[i]['address'], orders[i]['phone'])
+                        }
+                    } else {
+                        alert('GET실패');
+                    }
+                }
+            })
+        }
+
+        function make_card(name, qty, add, phone) {
+            let temp_html = `
+        <tr>
+            <th scope="row">${name}</th>
+            <td>${qty}</td>
+            <td>${add}</td>
+            <td>${phone}</td>
+          </tr>
+          `;
+            $('#table').append(temp_html);
+        }
+
+
+
+        function fill() {
+            let name = $("#name").val();
+            let qty = $("#qty").val();
+            let add = $("#add").val();
+            let phone = $("#phone").val();
+
+            if (name == "") {
+                alert("이름 쓰세요");
+            } else if (qty == "") {
+                alert("수량 쓰세요");
+            } else if (add == "") {
+                alert("주소 쓰세요");
+            } else if (phone == "") {
+                alert("전화번호 쓰세요");
+            } else {
+                alert("주문이 완료되었다");
+            }
+
+            // if(name != "" || ) -> 어떤 값이든 일단 차 있음 OR
+
+
+        }
+
+    </script>
+</head>
+
+<body class="body">
+    <div class="image_area">
+    </div>
+    <div class="large_text">
+        대동강 물 <span class="small_text">가격: 4000냥 (상평통보 only)</span>
+    </div>
+    <div class="description">
+        대동강 물 팝니다. 당신도 될수있다 자랑스런 조선의 흑우!
+    </div>
+    <div id="fex_class" class="fex_class">
+        환율 (달러-원):
+    </div>
+    <div class="large_text">
+        주문하기</span>
+    </div>
+    <div>
+        주문자 성함: <input id="name" type="text">
+    </div>
+    <div>
+        수량: <input id="qty" type="options">
+    </div>
+    <div>
+        주소: <input id="add" type="text">
+    </div>
+    <div>
+        전화번호: <input id="phone" type="text">
+    </div>
+    <div class="btn_btn-light">
+        <button type="button" class="btn_btn-light" onclick="write_order_info()">주문하기</button>
+    </div>
+    <table class="table" id="table">
+        <thead>
+            <tr>
+                <th scope="col">성함</th>
+                <th scope="col">수량</th>
+                <th scope="col">주소</th>
+                <th scope="col">전번</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
+
